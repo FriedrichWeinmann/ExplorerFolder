@@ -1,4 +1,4 @@
-<#
+﻿<#
 	.SYNOPSIS
 		Installs the ExplorerFolder Module from github
 		

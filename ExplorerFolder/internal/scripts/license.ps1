@@ -1,4 +1,4 @@
-New-PSFLicense -Product 'ExplorerFolder' -Manufacturer 'Friedrich Weinmann' -ProductVersion $script:ModuleVersion -ProductType Module -Name MIT -Version "1.0.0.0" -Date (Get-Date "2018-09-29") -Text @"
+﻿New-PSFLicense -Product 'ExplorerFolder' -Manufacturer 'Friedrich Weinmann' -ProductVersion $script:ModuleVersion -ProductType Module -Name MIT -Version "1.0.0.0" -Date (Get-Date "2018-09-29") -Text @"
 Copyright (c) 2018 Friedrich Weinmann
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
