@@ -1,5 +1,3 @@
 # Description
 
-Insert a useful description for the ExplorerFolder project here.
-
-Remember, it's the first thing a visitor will see.
+Module that allows you to tune the folders that are shown in the explroer shell
