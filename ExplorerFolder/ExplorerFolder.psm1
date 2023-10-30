@@ -1,5 +1,5 @@
 ﻿$script:ModuleRoot = $PSScriptRoot
-$script:ModuleVersion = "1.0.0.0"
+$script:ModuleVersion = (Import-PowerShellDataFile -Path "$($script:ModuleRoot)\ExplorerFolder.psd1").ModuleVersion
 
 # Detect whether at some level dotsourcing was enforced
 $script:doDotSource = Get-PSFConfigValue -FullName ExplorerFolder.Import.DoDotSource -Fallback $false
@@ -17,7 +17,7 @@ This is important when testing for paths.
 $importIndividualFiles = Get-PSFConfigValue -FullName ExplorerFolder.Import.IndividualFiles -Fallback $false
 if ($ExplorerFolder_importIndividualFiles) { $importIndividualFiles = $true }
 if (Test-Path (Resolve-PSFPath -Path "$($script:ModuleRoot)\..\.git" -SingleItem -NewChild)) { $importIndividualFiles = $true }
-if (-not (Test-Path (Resolve-PSFPath "$($script:ModuleRoot)\commands.ps1" -SingleItem -NewChild))) { $importIndividualFiles = $true }
+if ("<was not compiled>" -eq '<was not compiled>') { $importIndividualFiles = $true }
 	
 function Import-ModuleFile
 {
@@ -45,14 +45,18 @@ function Import-ModuleFile
 		$Path
 	)
 	
-	if ($doDotSource) { . (Resolve-Path $Path) }
-	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText((Resolve-Path $Path)))), $null, $null) }
+	$resolvedPath = $ExecutionContext.SessionState.Path.GetResolvedPSPathFromPSPath($Path).ProviderPath
+	if ($doDotSource) { . $resolvedPath }
+	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText($resolvedPath))), $null, $null) }
 }
 
+#region Load individual files
 if ($importIndividualFiles)
 {
 	# Execute Preimport actions
-	. Import-ModuleFile -Path "$ModuleRoot\internal\scripts\preimport.ps1"
+	foreach ($path in (& "$ModuleRoot\internal\scripts\preimport.ps1")) {
+		. Import-ModuleFile -Path $path
+	}
 	
 	# Import all internal functions
 	foreach ($function in (Get-ChildItem "$ModuleRoot\internal\functions" -Filter "*.ps1" -Recurse -ErrorAction Ignore))
@@ -67,19 +71,15 @@ if ($importIndividualFiles)
 	}
 	
 	# Execute Postimport actions
-	. Import-ModuleFile -Path "$ModuleRoot\internal\scripts\postimport.ps1"
-}
-else
-{
-	if (Test-Path (Resolve-PSFPath "$($script:ModuleRoot)\resourcesBefore.ps1" -SingleItem -NewChild))
-	{
-		. Import-ModuleFile -Path "$($script:ModuleRoot)\resourcesBefore.ps1"
+	foreach ($path in (& "$ModuleRoot\internal\scripts\postimport.ps1")) {
+		. Import-ModuleFile -Path $path
 	}
 	
-	. Import-ModuleFile -Path "$($script:ModuleRoot)\commands.ps1"
-	
-	if (Test-Path (Resolve-PSFPath "$($script:ModuleRoot)\resourcesAfter.ps1" -SingleItem -NewChild))
-	{
-		. Import-ModuleFile -Path "$($script:ModuleRoot)\resourcesAfter.ps1"
-	}
+	# End it here, do not load compiled code below
+	return
 }
+#endregion Load individual files
+
+#region Load compiled code
+"<compile code into here>"
+#endregion Load compiled code
