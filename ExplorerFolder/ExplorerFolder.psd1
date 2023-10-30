@@ -3,7 +3,7 @@
 	ModuleToProcess = 'ExplorerFolder.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.0.0.0'
+	ModuleVersion = '1.1.2'
 	
 	# ID used to uniquely identify this module
 	GUID = '295f5958-22e5-496a-8705-a0a85a3982b4'
@@ -21,12 +21,12 @@
 	Description = 'Manages the Explorer Shell'
 	
 	# Minimum version of the Windows PowerShell engine required by this module
-	PowerShellVersion = '5.0'
+	PowerShellVersion = '5.1'
 	
 	# Modules that must be imported into the global environment prior to importing
 	# this module
 	RequiredModules = @(
-		@{ ModuleName='PSFramework'; ModuleVersion='0.10.27.128' }
+		@{ ModuleName='PSFramework'; ModuleVersion='1.9.310' }
 	)
 	
 	# Assemblies that must be loaded prior to importing this module
@@ -40,19 +40,21 @@
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
-		'Get-ExplorerFolder',
-		'Set-ExplorerFolder',
+		'Disable-EFGallery'
+		'Enable-EFGallery'
+		'Get-ExplorerFolder'
+		'Set-ExplorerFolder'
 		'Remove-ExplorerFolder'
 	)
 	
 	# Cmdlets to export from this module
-	CmdletsToExport = ''
+	CmdletsToExport = @()
 	
 	# Variables to export from this module
-	VariablesToExport = ''
+	VariablesToExport = @()
 	
 	# Aliases to export from this module
-	AliasesToExport = ''
+	AliasesToExport = @()
 	
 	# List of all modules packaged with this module
 	ModuleList = @()
@@ -67,13 +69,13 @@
 		PSData = @{
 			
 			# Tags applied to this module. These help with module discovery in online galleries.
-			# Tags = @()
+			Tags = @('windows', 'explorer', 'convenience')
 			
 			# A URL to the license for this module.
-			# LicenseUri = ''
+			LicenseUri = 'https://github.com/FriedrichWeinmann/ExplorerFolder/blob/development/LICENSE'
 			
 			# A URL to the main website for this project.
-			# ProjectUri = ''
+			ProjectUri = 'https://github.com/FriedrichWeinmann/ExplorerFolder'
 			
 			# A URL to an icon representing this module.
 			# IconUri = ''

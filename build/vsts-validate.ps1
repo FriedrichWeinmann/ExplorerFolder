@@ -4,4 +4,11 @@
 # Needs to ensure things are Done Right and only legal commits to master get built
 
 # Run internal pester tests
-& "$PSScriptRoot\..\ExplorerFolder\tests\pester.ps1"
+try { & "$PSScriptRoot\..\ExplorerFolder\tests\pester.ps1" }
+catch { throw }
+
+$filter = New-PSFFilter -Expression "EnvGithubAction" -ConditionSet (Get-PSFFilterConditionSet -Name Environment)
+if ($filter.Evaluate()) {
+	Stop-PSFRunspace -Name psframework.logging
+	exit 0
+}
