@@ -5,3 +5,8 @@
 
 # Run internal pester tests
 & "$PSScriptRoot\..\ExplorerFolder\tests\pester.ps1"
+
+$filter = New-PSFFilter -Expression "EnvGithubAction" -ConditionSet (Get-PSFFilterConditionSet -Name Environment)
+if ($filter.Evaluate()) {
+	Stop-PSFRunspace -Name psframework.logging
+}
